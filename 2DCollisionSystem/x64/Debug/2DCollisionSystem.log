@@ -1,0 +1,17 @@
+﻿  2DCollisionSystem.cpp
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(53,37): warning C4244: 'argument': conversion from 'float' to 'size_t', possible loss of data
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(59,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(65,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(71,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(77,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(98,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(104,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(110,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(116,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(172,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(179,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(185,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(191,29): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(200,1): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\anand\Documents\GitHub\2DCollisionSystem\2DCollisionSystem\shapes.h(209,1): warning C4305: 'argument': truncation from 'double' to 'float'
+  2DCollisionSystem.vcxproj -> C:\Users\anand\Documents\GitHub\2DCollisionSystem\x64\Debug\2DCollisionSystem.exe
