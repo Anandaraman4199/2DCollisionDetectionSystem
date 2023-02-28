@@ -2,17 +2,23 @@
 
 int main()
 {
+
+// Get Screen Size
+
     const int SCREEN_HEIGHT = sf::VideoMode::getDesktopMode().height;
     const int SCREEN_WIDTH = sf::VideoMode::getDesktopMode().width;
+
+// Create window
 
     sf::RenderWindow window(sf::VideoMode(SCREEN_WIDTH, SCREEN_HEIGHT), "GameMath", sf::Style::Fullscreen);
 
     sf::Event evnt;
 
-    Rectangle rect(100, 300, Vector2f(1000, 600));
+// Create any two shapes from Shapes namespace to detect collision
 
-    Oriented_Rectangle oriented_rect(Vector2f(1750, 890), Vector2f(150, 250), 60);
+    Shapes::Rectangle rect(100, 300, Vector2f(1000, 600));
 
+    Shapes::Oriented_Rectangle oriented_rect(Vector2f(1750, 890), Vector2f(150, 250), 60);
 
     while (window.isOpen())
     {
@@ -24,6 +30,7 @@ int main()
             }
         }
 
+// Keybindings for the movements for the shapes
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
         {
@@ -42,28 +49,32 @@ int main()
             rect.moveDown();
         }
 
+//Checking collision for the shapes
 
         if (checkCollision(rect, oriented_rect))
         {
-            rect.rect.setFillColor(sf::Color::Red);
-            oriented_rect.rect[0].color = sf::Color::Red;
-            oriented_rect.rect[1].color = sf::Color::Red;
-            oriented_rect.rect[2].color = sf::Color::Red;
-            oriented_rect.rect[3].color = sf::Color::Red;
+
+//Changing the color by custom function called setColor to see the collision
+
+            rect.setColour(sf::Color::Red);
+            oriented_rect.setColour(sf::Color::Red);
+
 
         }
         else
         {
-            rect.rect.setFillColor(sf::Color::White);
-            oriented_rect.rect[0].color = sf::Color::White;
-            oriented_rect.rect[1].color = sf::Color::White;
-            oriented_rect.rect[2].color = sf::Color::White;
-            oriented_rect.rect[3].color = sf::Color::White;
+
+//Changing color
+
+            rect.setColour(sf::Color::White);
+            oriented_rect.setColour(sf::Color::White);
         }
 
         window.clear();
 
-        window.draw(rect.rect);
+//Calling the custom function to render the shapes
+
+        rect.draw(window);
 
         oriented_rect.draw(window);
 

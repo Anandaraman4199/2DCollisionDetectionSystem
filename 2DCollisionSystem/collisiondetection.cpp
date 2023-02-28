@@ -7,7 +7,7 @@ Range range_hull(Range& first, Range& second)
 
 //Rectangle Collision Detection
 
-bool checkCollision(Rectangle& first, Rectangle& second)
+bool checkCollision(Shapes::Rectangle& first, Shapes::Rectangle& second)
 {
     float minSA = first.origin.x;
     float maxSA = first.origin.x + first.width;
@@ -27,7 +27,7 @@ bool checkCollision(Rectangle& first, Rectangle& second)
 
 //Circle Collision Detection
 
-bool checkCollision(Circle& first, Circle& second)
+bool checkCollision(Shapes::Circle& first, Shapes::Circle& second)
 {
     return ((second.centre - first.centre).length()) <= (first.radius + second.radius);
 }
@@ -45,7 +45,7 @@ bool parallelVectorCheck(Vector2f& first, Vector2f& second)
     return true;
 }
 
-bool checkCollision(Line& first, Line& second)
+bool checkCollision(Shapes::Line& first, Shapes::Line& second)
 {
     if (!parallelVectorCheck(first.direction, second.direction))
     {
@@ -63,7 +63,7 @@ bool checkCollision(Line& first, Line& second)
 
 }
 
-bool on_one_side(Line& Axis, LineSegment& otherSegment)
+bool on_one_side(Shapes::Line& Axis, Shapes::LineSegment& otherSegment)
 {
     Vector2f rotatedVector = Axis.direction;
     rotatedVector.rotate(90);
@@ -72,21 +72,21 @@ bool on_one_side(Line& Axis, LineSegment& otherSegment)
     return dotproduct(rotatedVector, point1frombase) * dotproduct(rotatedVector, point2frombase) > 0;
 }
 
-Range project_segment(Vector2f direction_unit_vector, LineSegment segment)
+Range project_segment(Vector2f direction_unit_vector, Shapes::LineSegment segment)
 {
     Range project(dotproduct(direction_unit_vector, segment.point1), dotproduct(direction_unit_vector, segment.point2));
     project.sort();
     return project;
 }
 
-bool checkCollision(LineSegment& first, LineSegment& second)
+bool checkCollision(Shapes::LineSegment& first, Shapes::LineSegment& second)
 {
-    Line fAxis(first.point1, first.point2 - first.point1);
+    Shapes::Line fAxis(first.point1, first.point2 - first.point1);
     if (on_one_side(fAxis, second))
     {
         return false;
     }
-    Line sAxis(second.point1, second.point2 - second.point1);
+    Shapes::Line sAxis(second.point1, second.point2 - second.point1);
     if (on_one_side(sAxis, first))
     {
         return false;
@@ -108,7 +108,7 @@ bool checkCollision(LineSegment& first, LineSegment& second)
 
 }
 
-LineSegment oriented_rectangle_edge(Oriented_Rectangle& orientedRect, int edge)
+Shapes::LineSegment oriented_rectangle_edge(Shapes::Oriented_Rectangle& orientedRect, int edge)
 {
     Vector2f point1(orientedRect.halfExtend);
     Vector2f point2(orientedRect.halfExtend);
@@ -134,17 +134,17 @@ LineSegment oriented_rectangle_edge(Oriented_Rectangle& orientedRect, int edge)
     point1.rotate(orientedRect.angle);
     point2.rotate(orientedRect.angle);
 
-    return LineSegment(point1 + orientedRect.centre, point2 + orientedRect.centre);
+    return Shapes::LineSegment(point1 + orientedRect.centre, point2 + orientedRect.centre);
 
 }
 
-bool seperating_axis_oriented_rectangle(LineSegment& edge, Oriented_Rectangle& other)
+bool seperating_axis_oriented_rectangle(Shapes::LineSegment& edge, Shapes::Oriented_Rectangle& other)
 {
     Vector2f axis = edge.point2 - edge.point1;
     axis = axis.unitVector();
 
-    LineSegment second0edge = oriented_rectangle_edge(other, 0);
-    LineSegment second2edge = oriented_rectangle_edge(other, 2);
+    Shapes::LineSegment second0edge = oriented_rectangle_edge(other, 0);
+    Shapes::LineSegment second2edge = oriented_rectangle_edge(other, 2);
 
     Range firstRange = project_segment(axis, edge);
     Range second0Range = project_segment(axis, second0edge);
@@ -154,9 +154,9 @@ bool seperating_axis_oriented_rectangle(LineSegment& edge, Oriented_Rectangle& o
     return (firstRange.max >= secondRange.min) && (secondRange.max >= firstRange.min);
 }
 
-bool checkCollision(Oriented_Rectangle& first, Oriented_Rectangle& second)
+bool checkCollision(Shapes::Oriented_Rectangle& first, Shapes::Oriented_Rectangle& second)
 {
-    LineSegment edge = oriented_rectangle_edge(first, 0);
+    Shapes::LineSegment edge = oriented_rectangle_edge(first, 0);
 
     if (!seperating_axis_oriented_rectangle(edge, second))
     {
@@ -183,12 +183,12 @@ bool checkCollision(Oriented_Rectangle& first, Oriented_Rectangle& second)
 
 }
 
-bool checkCollision(Circle& circle, Vector2f& point)
+bool checkCollision(Shapes::Circle& circle, Vector2f& point)
 {
     return (point - circle.centre).length() <= circle.radius;
 }
 
-bool checkCollision(Circle& circle, Line& line)
+bool checkCollision(Shapes::Circle& circle, Shapes::Line& line)
 {
     Vector2f line_to_circle = circle.centre - line.point;
     Vector2f project = projection(line_to_circle, line.direction);
@@ -197,7 +197,7 @@ bool checkCollision(Circle& circle, Line& line)
     return checkCollision(circle, nearest_point);
 }
 
-bool checkCollision(Circle& circle, LineSegment& segment)
+bool checkCollision(Shapes::Circle& circle, Shapes::LineSegment& segment)
 {
     if (checkCollision(circle, segment.point1))
     {
@@ -234,7 +234,7 @@ float clamp_on_range(float point, float min, float max)
 
 }
 
-Vector2f nearest_vector(Vector2f point, Rectangle& rectangle)
+Vector2f nearest_vector(Vector2f point, Shapes::Rectangle& rectangle)
 {
     Vector2f clamped;
     clamped.x = clamp_on_range(point.x, rectangle.origin.x, rectangle.origin.x + rectangle.width);
@@ -242,27 +242,27 @@ Vector2f nearest_vector(Vector2f point, Rectangle& rectangle)
     return clamped;
 }
 
-bool checkCollision(Circle& circle, Rectangle& rectangle)
+bool checkCollision(Shapes::Circle& circle, Shapes::Rectangle& rectangle)
 {
     Vector2f nearest = nearest_vector(circle.centre, rectangle);
     return checkCollision(circle, nearest);
 }
 
-bool checkCollision(Circle& circle, Oriented_Rectangle& orientedRectangle)
+bool checkCollision(Shapes::Circle& circle, Shapes::Oriented_Rectangle& orientedRectangle)
 {
     Vector2f localRectSize = orientedRectangle.halfExtend;
     localRectSize.scale(2);
-    Rectangle localRect(localRectSize.x, localRectSize.y, Vector2f(0, 0));
+    Shapes::Rectangle localRect(localRectSize.x, localRectSize.y, Vector2f(0, 0));
     Vector2f distance = circle.centre - orientedRectangle.centre;
     distance.rotate(-orientedRectangle.angle);
     Vector2f localCircleCentre = distance + orientedRectangle.halfExtend;
 
-    Circle localCircle(localCircleCentre, circle.radius);
+    Shapes::Circle localCircle(localCircleCentre, circle.radius);
 
     return checkCollision(localCircle, localRect);
 }
 
-bool checkCollision(Rectangle& rectangle, Vector2f& point)
+bool checkCollision(Shapes::Rectangle& rectangle, Vector2f& point)
 {
     return (point.x) >= rectangle.origin.x
         &&
@@ -274,7 +274,7 @@ bool checkCollision(Rectangle& rectangle, Vector2f& point)
 
 }
 
-bool checkCollision(Rectangle& rectangle, Line& line)
+bool checkCollision(Shapes::Rectangle& rectangle, Shapes::Line& line)
 {
 
     Vector2f rotated_direction = line.direction;
@@ -300,10 +300,10 @@ bool checkCollision(Rectangle& rectangle, Line& line)
 
 }
 
-bool checkCollision(Rectangle& rectangle, LineSegment& segment)
+bool checkCollision(Shapes::Rectangle& rectangle, Shapes::LineSegment& segment)
 {
 
-    Line sAxis(segment.point1, segment.point2 - segment.point1);
+    Shapes::Line sAxis(segment.point1, segment.point2 - segment.point1);
     if (!checkCollision(rectangle, sAxis))
     {
         return false;
@@ -334,29 +334,6 @@ bool checkCollision(Rectangle& rectangle, LineSegment& segment)
 
 }
 
-/*Vector2f oriented_rectangle_corner(Oriented_Rectangle &orientedRect,int corner_no)
-{
-    Vector2f corner = orientedRect.halfExtend;
-    switch(corner_no)
-    {
-        case 0: corner.negate_vector();
-                break;
-
-        case 1: corner.y = -corner.y;
-                break;
-
-        case 2: corner = orientedRect.halfExtend;
-                break;
-
-        default: corner.x = -corner.x;
-                 break;
-    }
-    corner.rotate(orientedRect.angle);
-
-    return (corner+orientedRect.centre);
-
-}*/
-
 float minimum(float A, float B)
 {
     return A < B ? A : B;
@@ -367,9 +344,9 @@ float maximum(float A, float B)
     return A > B ? A : B;
 }
 
-Rectangle extend_bound_rectangle(Rectangle& bound, Vector2f& corner)
+Shapes::Rectangle extend_bound_rectangle(Shapes::Rectangle& bound, Vector2f& corner)
 {
-    Rectangle enlarged(0, 0, Vector2f(0, 0));
+    Shapes::Rectangle enlarged(0, 0, Vector2f(0, 0));
     enlarged.origin.x = minimum(bound.origin.x, corner.x);
     enlarged.origin.y = minimum(bound.origin.y, corner.y);
     enlarged.width = maximum(bound.origin.x + bound.width, corner.x);
@@ -383,9 +360,9 @@ Rectangle extend_bound_rectangle(Rectangle& bound, Vector2f& corner)
 }
 
 
-Rectangle oriented_rectangle_bound(Oriented_Rectangle& orientedRect)
+Shapes::Rectangle oriented_rectangle_bound(Shapes::Oriented_Rectangle& orientedRect)
 {
-    Rectangle bound(0, 0, orientedRect.centre);
+    Shapes::Rectangle bound(0, 0, orientedRect.centre);
 
     Vector2f corner;
 
@@ -399,7 +376,7 @@ Rectangle oriented_rectangle_bound(Oriented_Rectangle& orientedRect)
 
 }
 
-Vector2f rectangle_corner(Rectangle& rectangle, int corner_no)
+Vector2f rectangle_corner(Shapes::Rectangle& rectangle, int corner_no)
 {
     Vector2f corner = rectangle.origin;
 
@@ -424,12 +401,12 @@ Vector2f rectangle_corner(Rectangle& rectangle, int corner_no)
 }
 
 
-bool seperating_axis_rectangle(Rectangle& rectangle, LineSegment& edge)
+bool seperating_axis_rectangle(Shapes::Rectangle& rectangle, Shapes::LineSegment& edge)
 {
     Vector2f axis = edge.point2 - edge.point1;
 
-    LineSegment rEdge0(rectangle_corner(rectangle, 0), rectangle_corner(rectangle, 1));
-    LineSegment rEdge1(rectangle_corner(rectangle, 2), rectangle_corner(rectangle, 3));
+    Shapes::LineSegment rEdge0(rectangle_corner(rectangle, 0), rectangle_corner(rectangle, 1));
+    Shapes::LineSegment rEdge1(rectangle_corner(rectangle, 2), rectangle_corner(rectangle, 3));
 
     Range Edge0range = project_segment(axis, rEdge0);
     Range Edge1range = project_segment(axis, rEdge1);
@@ -442,16 +419,16 @@ bool seperating_axis_rectangle(Rectangle& rectangle, LineSegment& edge)
 
 }
 
-bool checkCollision(Rectangle& rect, Oriented_Rectangle& orientedRect)
+bool checkCollision(Shapes::Rectangle& rect, Shapes::Oriented_Rectangle& orientedRect)
 {
-    Rectangle bound = oriented_rectangle_bound(orientedRect);
+    Shapes::Rectangle bound = oriented_rectangle_bound(orientedRect);
 
     if (!checkCollision(rect, bound))
     {
         return false;
     }
 
-    LineSegment edge = oriented_rectangle_edge(orientedRect, 0);
+    Shapes::LineSegment edge = oriented_rectangle_edge(orientedRect, 0);
 
     if (!seperating_axis_rectangle(rect, edge))
     {
@@ -464,7 +441,7 @@ bool checkCollision(Rectangle& rect, Oriented_Rectangle& orientedRect)
 
 }
 
-bool checkCollision(Vector2f& point, Line& line)
+bool checkCollision(Vector2f& point, Shapes::Line& line)
 {
     if (point == line.point)
     {
@@ -475,7 +452,7 @@ bool checkCollision(Vector2f& point, Line& line)
 
 }
 
-bool checkCollision(Vector2f& point, LineSegment& segment)
+bool checkCollision(Vector2f& point, Shapes::LineSegment& segment)
 {
     Vector2f distance = segment.point2 - segment.point1;
     Vector2f toPoint = point - segment.point1;
@@ -483,9 +460,9 @@ bool checkCollision(Vector2f& point, LineSegment& segment)
     return parallelVectorCheck(toPoint, projected) && projected.length() <= distance.length() && dotproduct(projected, distance) >= 0;
 }
 
-bool checkCollision(Vector2f& point, Oriented_Rectangle& orientedRect)
+bool checkCollision(Vector2f& point, Shapes::Oriented_Rectangle& orientedRect)
 {
-    Rectangle localRect(orientedRect.halfExtend.x * 2, orientedRect.halfExtend.y * 2, Vector2f(0, 0));
+    Shapes::Rectangle localRect(orientedRect.halfExtend.x * 2, orientedRect.halfExtend.y * 2, Vector2f(0, 0));
     Vector2f localPoint = point - orientedRect.centre;
     localPoint.rotate(-orientedRect.angle);
     localPoint = localPoint + orientedRect.halfExtend;
@@ -493,14 +470,14 @@ bool checkCollision(Vector2f& point, Oriented_Rectangle& orientedRect)
     return checkCollision(localRect, localPoint);
 }
 
-bool checkCollision(Line& line, LineSegment& segment)
+bool checkCollision(Shapes::Line& line, Shapes::LineSegment& segment)
 {
     return !on_one_side(line, segment);
 }
 
-bool checkCollision(Line& line, Oriented_Rectangle& orientedRect)
+bool checkCollision(Shapes::Line& line, Shapes::Oriented_Rectangle& orientedRect)
 {
-    Rectangle localRect(orientedRect.halfExtend.x * 2, orientedRect.halfExtend.y * 2, Vector2f(0, 0));
+    Shapes::Rectangle localRect(orientedRect.halfExtend.x * 2, orientedRect.halfExtend.y * 2, Vector2f(0, 0));
 
     Vector2f localLineBase = line.point - orientedRect.centre;
     localLineBase.rotate(-orientedRect.angle);
@@ -509,15 +486,15 @@ bool checkCollision(Line& line, Oriented_Rectangle& orientedRect)
     Vector2f localLineDirection = line.direction;
     line.direction.rotate(-orientedRect.angle);
 
-    Line localLine(localLineBase, localLineDirection);
+    Shapes::Line localLine(localLineBase, localLineDirection);
 
     return checkCollision(localRect, localLine);
 
 }
 
-bool checkCollision(LineSegment& segment, Oriented_Rectangle& orientedRect)
+bool checkCollision(Shapes::LineSegment& segment, Shapes::Oriented_Rectangle& orientedRect)
 {
-    Rectangle localRect(orientedRect.halfExtend.x * 2, orientedRect.halfExtend.y * 2, Vector2f(0, 0));
+    Shapes::Rectangle localRect(orientedRect.halfExtend.x * 2, orientedRect.halfExtend.y * 2, Vector2f(0, 0));
 
     Vector2f localSegmentPoint1 = segment.point1 - orientedRect.centre;
     localSegmentPoint1.rotate(-orientedRect.angle);
@@ -527,7 +504,7 @@ bool checkCollision(LineSegment& segment, Oriented_Rectangle& orientedRect)
     localSegmentPoint2.rotate(-orientedRect.angle);
     localSegmentPoint2 = localSegmentPoint2 + orientedRect.halfExtend;
 
-    LineSegment localSegment(localSegmentPoint1, localSegmentPoint2);
+    Shapes::LineSegment localSegment(localSegmentPoint1, localSegmentPoint2);
 
     return checkCollision(localRect, localSegment);
 

@@ -29,42 +29,42 @@ struct Range
 
 Range range_hull(Range& first, Range& second);
 
-bool checkCollision(Oriented_Rectangle& first, Oriented_Rectangle& second);
+bool checkCollision(Shapes::Oriented_Rectangle& first, Shapes::Oriented_Rectangle& second);
 
-bool checkCollision(Rectangle& first, Rectangle& second);
+bool checkCollision(Shapes::Rectangle& first, Shapes::Rectangle& second);
 
-bool checkCollision(Circle& first, Circle& second);
+bool checkCollision(Shapes::Circle& first, Shapes::Circle& second);
 
-bool checkCollision(Line& first, Line& second);
+bool checkCollision(Shapes::Line& first, Shapes::Line& second);
 
-bool checkCollision(LineSegment& first, LineSegment& second);
+bool checkCollision(Shapes::LineSegment& first, Shapes::LineSegment& second);
 
-bool checkCollision(Circle& circle, Vector2f& point);
+bool checkCollision(Shapes::Circle& circle, Vector2f& point);
 
-bool checkCollision(Circle& circle, Line& line);
+bool checkCollision(Shapes::Circle& circle, Shapes::Line& line);
 
-bool checkCollision(Circle& circle, LineSegment& segment);
+bool checkCollision(Shapes::Circle& circle, Shapes::LineSegment& segment);
 
-bool checkCollision(Circle& circle, Rectangle& rectangle);
+bool checkCollision(Shapes::Circle& circle, Shapes::Rectangle& rectangle);
 
-bool checkCollision(Circle& circle, Oriented_Rectangle& orientedRectangle);
+bool checkCollision(Shapes::Circle& circle, Shapes::Oriented_Rectangle& orientedRectangle);
 
-bool checkCollision(Rectangle& rectangle, Vector2f& point);
+bool checkCollision(Shapes::Rectangle& rectangle, Vector2f& point);
 
-bool checkCollision(Rectangle& rectangle, Line& line);
+bool checkCollision(Shapes::Rectangle& rectangle, Shapes::Line& line);
 
-bool checkCollision(Rectangle& rectangle, LineSegment& segment);
+bool checkCollision(Shapes::Rectangle& rectangle, Shapes::LineSegment& segment);
 
-bool checkCollision(Rectangle& rect, Oriented_Rectangle& orientedRect);
+bool checkCollision(Shapes::Rectangle& rect, Shapes::Oriented_Rectangle& orientedRect);
 
-bool checkCollision(Vector2f& point, Line& line);
+bool checkCollision(Vector2f& point, Shapes::Line& line);
 
-bool checkCollision(Vector2f& point, LineSegment& segment);
+bool checkCollision(Vector2f& point, Shapes::LineSegment& segment);
 
-bool checkCollision(Vector2f& point, Oriented_Rectangle& orientedRect);
+bool checkCollision(Vector2f& point, Shapes::Oriented_Rectangle& orientedRect);
 
-bool checkCollision(Line& line, LineSegment& segment);
+bool checkCollision(Shapes::Line& line, Shapes::LineSegment& segment);
 
-bool checkCollision(Line& line, Oriented_Rectangle& orientedRect);
+bool checkCollision(Shapes::Line& line, Shapes::Oriented_Rectangle& orientedRect);
 
-bool checkCollision(LineSegment& segment, Oriented_Rectangle& orientedRect);
+bool checkCollision(Shapes::LineSegment& segment, Shapes::Oriented_Rectangle& orientedRect);
