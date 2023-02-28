@@ -135,7 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="2DCollisionSystem.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="collisiondetection.cpp" />
     <ClCompile Include="vector2f.cpp" />
   </ItemGroup>
