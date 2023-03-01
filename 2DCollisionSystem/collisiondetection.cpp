@@ -1,11 +1,17 @@
 #include <collisiondetection.h>
 
+// Call this function to join two projected range and make it as a one big range
+
 Range range_hull(Range& first, Range& second)
 {
     return Range(first.min<second.min ? first.min : second.min, second.max>first.max ? second.max : first.max);
 }
 
-//Rectangle Collision Detection
+/* Rectangle - Rectangle Collision Detection
+   
+   This is done by checking each axis seperatly. This is an AABB Collision method.
+
+*/
 
 bool checkCollision(Shapes::Rectangle& first, Shapes::Rectangle& second)
 {
@@ -25,14 +31,21 @@ bool checkCollision(Shapes::Rectangle& first, Shapes::Rectangle& second)
     return sideCollision && verticalCollision;
 }
 
-//Circle Collision Detection
+/* Circle - Circle Collision Detection
+
+   If the distance between the centre of both circles is less or equal than the sum of the radius of both circle, both circles collide.
+
+*/
 
 bool checkCollision(Shapes::Circle& first, Shapes::Circle& second)
 {
     return ((second.centre - first.centre).length()) <= (first.radius + second.radius);
 }
 
-//Line Collision Detection
+/*  This function is used to check whether both the given vectors are parallel.
+    This is done by rotating the second vector by 90 degrees and checking the dot product between them
+    If the dot product is zero. Then there are parallel.
+*/
 
 bool parallelVectorCheck(Vector2f& first, Vector2f& second)
 {
@@ -44,6 +57,20 @@ bool parallelVectorCheck(Vector2f& first, Vector2f& second)
     }
     return true;
 }
+
+/* Line - Line Collision.
+
+   This is done by checking whether two lines are parallel.
+   If they are not, they collide.
+   If they are parallel, check the direction between the points of both the lines by subtracting their points.
+
+   Then this direction vector one of the line's direction vector will be checked for parallel.
+   If they are parallel, they collide.
+
+   If they are not,  they dont collide.
+
+
+*/
 
 bool checkCollision(Shapes::Line& first, Shapes::Line& second)
 {
@@ -63,6 +90,18 @@ bool checkCollision(Shapes::Line& first, Shapes::Line& second)
 
 }
 
+/*
+    This function is used to whether both the points of the given line segment is on the one side to the given line.
+
+    This is done by
+
+    1. Rotating the direction vector (RV) of the line by 90 degrees. 
+    2. Finding the vector (P1),(P2) from point of the line to both of the points of the line segments.
+    3. Multiplying the dot product of the (RV,P1) and (RV,P2).
+    4. If the result is positive, then the given line segment is on one side. 
+
+*/
+
 bool on_one_side(Shapes::Line& Axis, Shapes::LineSegment& otherSegment)
 {
     Vector2f rotatedVector = Axis.direction;
@@ -71,6 +110,7 @@ bool on_one_side(Shapes::Line& Axis, Shapes::LineSegment& otherSegment)
     Vector2f point2frombase = otherSegment.point2 - Axis.point;
     return dotproduct(rotatedVector, point1frombase) * dotproduct(rotatedVector, point2frombase) > 0;
 }
+
 
 Range project_segment(Vector2f direction_unit_vector, Shapes::LineSegment segment)
 {

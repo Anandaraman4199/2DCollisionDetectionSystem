@@ -1,6 +1,8 @@
 #pragma once
 #include <shapes.h>
 
+//Range is used to store the two values which is usually the locations of projected line segment of the shapes
+
 struct Range
 {
     float min, max;
@@ -27,7 +29,11 @@ struct Range
     }
 };
 
+// Call this function to join two projected range and make it as a one big range
+
 Range range_hull(Range& first, Range& second);
+
+// These functions are used to check the collision detection between the shapes
 
 bool checkCollision(Shapes::Oriented_Rectangle& first, Shapes::Oriented_Rectangle& second);
 
