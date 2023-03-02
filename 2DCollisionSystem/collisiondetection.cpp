@@ -111,6 +111,11 @@ bool on_one_side(Shapes::Line& Axis, Shapes::LineSegment& otherSegment)
     return dotproduct(rotatedVector, point1frombase) * dotproduct(rotatedVector, point2frombase) > 0;
 }
 
+/* This function is used to get the magnitude of a line segment on the given direction.
+*  The starting point value will be stored in min and end point value will be stored in the max
+*  This is achieved by the dot product of unit direction vector and each point of the line segment.
+*  This return Range object which contains min and max value.
+*/
 
 Range project_segment(Vector2f direction_unit_vector, Shapes::LineSegment segment)
 {
@@ -118,6 +123,25 @@ Range project_segment(Vector2f direction_unit_vector, Shapes::LineSegment segmen
     project.sort();
     return project;
 }
+
+/* Line Segment - Line Segment collision
+
+*  This is done by the following steps
+
+*  1. Create a line starting from pointA of first Line Segment in the direction of pointB of first Line Segment
+*  2. Check does both the points of the second Line segment lies on one side of the created line.
+*       a. If so, they doesn't collide.
+*  3. If not, create a line on the direction of second line segment same as the first one and check whether the points of the first 
+*     line segment lies on one side.
+*       a. If so, they doesn't collide.
+*  4. If not, check whether both the segments are parallel,
+*       a. If not, they collide.
+*  5. If so, project both the segment on to the direction of any one of the both segment, by using project_segment function and
+      store the return value in two range objects respectively.
+   6. Compare the values of min and max of both the ranges.
+      a. If they overlap, they collide.
+      b. If not, they dont collide.
+*/
 
 bool checkCollision(Shapes::LineSegment& first, Shapes::LineSegment& second)
 {
@@ -147,6 +171,17 @@ bool checkCollision(Shapes::LineSegment& first, Shapes::LineSegment& second)
     }
 
 }
+
+/* This function will return a given side of the given oriented rectangle as a line segment.
+* 
+*  This is done by the following steps:
+*  1. Create two points and the half extend of the given oriented rectangle on both.
+*  2. As it a rectangle, the half extend will be equal for all the corners from the center.
+*  3. Negate the x and y of the points for the given edge no, imagining as it lies on a local space.
+*  4. Rotate the points by the rotation of the oriented rectangle.
+*  5. Add those points to the centre of the oriented rectangle and return both the points as line segments.
+* 
+*/
 
 Shapes::LineSegment oriented_rectangle_edge(Shapes::Oriented_Rectangle& orientedRect, int edge)
 {
@@ -178,6 +213,20 @@ Shapes::LineSegment oriented_rectangle_edge(Shapes::Oriented_Rectangle& oriented
 
 }
 
+/* This function project the two opposite edges of the given oriented rectangle on to the direction of the given edge 
+   and checks whether the given edge and the projected edges overlap.
+
+   This is called Seperating Axis theorem (SAT) and this is done by the following steps.
+
+   1. Create a vector to get the direction of the given edge and make it as a unit vector.
+   2. Create two line segments to store the any two opposites edges of the given oriented rectangle 
+      by using oriented_rectangle_edge() function.
+   3. Project both the Line segments on to the unit direction vector and store the return Range values.
+   4. Call range_hull function to create range to store the min of the both range and the max of the both range.
+   5. Project the given edge on to the direction unit vector and store the range value.
+   6. Return whether these two range values overlap.
+*/
+
 bool seperating_axis_oriented_rectangle(Shapes::LineSegment& edge, Shapes::Oriented_Rectangle& other)
 {
     Vector2f axis = edge.point2 - edge.point1;
@@ -193,6 +242,23 @@ bool seperating_axis_oriented_rectangle(Shapes::LineSegment& edge, Shapes::Orien
 
     return (firstRange.max >= secondRange.min) && (secondRange.max >= firstRange.min);
 }
+
+/* Oriented Rectangle - Oriented Rectangle collision.
+   
+   1. Create a line segment to store one edge of the first oriented rectangle.
+   2. Call the seperating_axis_oriented_rectangle() function by passing the second oriented rectangle and the edge of the first rectangle.
+   3. If the function return false, then both the rectangles dont collide.
+   4. Otherwise, create a line segment to store the adjacent edge of the first oriented rectangle.
+   5. Call the SAT function with this edge and second rectangle.
+   6. If the function return false, then both the rectangles dont collide.
+   7. Otherwise, create a line segment to store the one edge of the second oriented rectangle.
+   8. Call the SAT function with this edge and first rectangle.
+   9. If the function return false, then both the rectangles dont collide.
+   10. Otherwise, create a line segment to store the adjacent edge of the second oriented rectangle.
+   11. Call the SAT function with this edge and first rectangle.
+   12. If the function return false, then both the rectangles dont collide.
+   13. Otherwise, they collide.
+*/
 
 bool checkCollision(Shapes::Oriented_Rectangle& first, Shapes::Oriented_Rectangle& second)
 {
@@ -223,10 +289,27 @@ bool checkCollision(Shapes::Oriented_Rectangle& first, Shapes::Oriented_Rectangl
 
 }
 
+/* Circle - Point collision
+    
+    If the distance between the point and the centre of the circle is lesser or equal than the circle radius, they collide.
+    Otherwise they dont.
+
+*/
+
 bool checkCollision(Shapes::Circle& circle, Vector2f& point)
 {
     return (point - circle.centre).length() <= circle.radius;
 }
+
+/* Circle - Line Collision
+
+   1. Create vector from line point to circle.
+   2. Project this vector on the line using projection() vector function,
+      which will return the distance between the line point and the nearest point on the line from the circle.
+   3. Add the returned vector to the line point to get the location in the 2d space.
+   4. Check whether the nearest point is inside the circle. If so, they collide. Otherwise, they dont.
+    
+*/
 
 bool checkCollision(Shapes::Circle& circle, Shapes::Line& line)
 {
@@ -236,6 +319,8 @@ bool checkCollision(Shapes::Circle& circle, Shapes::Line& line)
 
     return checkCollision(circle, nearest_point);
 }
+
+
 
 bool checkCollision(Shapes::Circle& circle, Shapes::LineSegment& segment)
 {
