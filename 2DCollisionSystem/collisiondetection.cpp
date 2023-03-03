@@ -320,7 +320,17 @@ bool checkCollision(Shapes::Circle& circle, Shapes::Line& line)
     return checkCollision(circle, nearest_point);
 }
 
-
+/* Circle - Line Segment Collision Detection
+*   
+*   1. Check whether any one of the points of the line segment collides with circle.
+*   2. If so, the circle collides with the line segment.
+*   3. If not, make an imaginary line in the direction of the line segment.
+*   4. Check whether the nearest point in the line collides with the circle.
+*   5. If not, they dont collide.
+*   6. If so, if the distance between the nearest point and pointA of the line segment is lesser than the distance of the line segment
+*      and if the dot product of the line segment direction and the distance between the nearest point and pointA 
+       of the line segment is greater than 0. Then they collide.
+*/
 
 bool checkCollision(Shapes::Circle& circle, Shapes::LineSegment& segment)
 {
@@ -342,6 +352,10 @@ bool checkCollision(Shapes::Circle& circle, Shapes::LineSegment& segment)
 
 }
 
+/* 
+    This function can be used to clamp the float value 
+*/
+
 float clamp_on_range(float point, float min, float max)
 {
 
@@ -359,6 +373,12 @@ float clamp_on_range(float point, float min, float max)
 
 }
 
+/*
+*  This function can be used to find the point in the given rectangle which is nearest to the given point
+   This is done by taking the x and y of the given point and clamping it to the min and max points of the given rectangle.
+
+*/
+
 Vector2f nearest_vector(Vector2f point, Shapes::Rectangle& rectangle)
 {
     Vector2f clamped;
@@ -367,11 +387,30 @@ Vector2f nearest_vector(Vector2f point, Shapes::Rectangle& rectangle)
     return clamped;
 }
 
+/*
+*  Circle - Rectangle Collision Detection.
+*  
+*  1. Find the nearest point in the given rectangle to the given circle by calling the nearest_vector() function with the centre of the circle.
+*  2. Check whether the nearest point collides with the circle.
+*  3. If so they collide. Otherwise they dont.
+* 
+*/
+
 bool checkCollision(Shapes::Circle& circle, Shapes::Rectangle& rectangle)
 {
     Vector2f nearest = nearest_vector(circle.centre, rectangle);
     return checkCollision(circle, nearest);
 }
+
+/* Circle - Oriented Rectangle Collision Detection
+* 
+*  1. Create a same from the dimension of the oriented rectangle to visualize the local co-ordinates of the oriented rectangle.#
+*  2. Calculate the distance between oriented rectangle and circle.
+*  3. Rotate the vector by the negative value of the angle of oriented rectangle.
+*  4. Add this vector to the half extend of the oriented rectangle, to find the centre of the circle in the local space of the oriented rectangle.
+*  5. Create a circle in the local space and check collision between the local rectangle and local circle.
+* 
+*/
 
 bool checkCollision(Shapes::Circle& circle, Shapes::Oriented_Rectangle& orientedRectangle)
 {
@@ -387,6 +426,12 @@ bool checkCollision(Shapes::Circle& circle, Shapes::Oriented_Rectangle& oriented
     return checkCollision(localCircle, localRect);
 }
 
+/* Rectangle - Point Collision Detection.
+* 
+*  If the x and y value of the point lies between the min and max of the rectangle. Then they collide.
+* 
+*/
+
 bool checkCollision(Shapes::Rectangle& rectangle, Vector2f& point)
 {
     return (point.x) >= rectangle.origin.x
@@ -398,6 +443,14 @@ bool checkCollision(Shapes::Rectangle& rectangle, Vector2f& point)
         point.y <= rectangle.origin.y + rectangle.height;
 
 }
+
+/* Rectangle - Line Collision Detection
+* 
+*  1. Rotate the direction vector of the line by 90 degrees
+*  2. Create four vectors for four points of the rectangles from the point of the line.
+*  3. If mulpilication of any two dot product of the rotated direction vector and the four vector is less than zero, then they collide.
+* 
+*/
 
 bool checkCollision(Shapes::Rectangle& rectangle, Shapes::Line& line)
 {
@@ -424,6 +477,19 @@ bool checkCollision(Shapes::Rectangle& rectangle, Shapes::Line& line)
     return (dp1 * dp4 <= 0) || (dp2 * dp3 <= 0);
 
 }
+
+/* Rectangle - Line Segment Collision Detection
+*  
+*  1. Create a line in the direction of the line segment.
+*  2. Check whether the given rectangle collides with this line. 
+*  3. If not, they dont collide. 
+*  4. Otherwise, store the min and max values of x and y axis of rectangle in two range objects respectively.
+*  5. In the same way, store the x and y values of both the points of line segment in two range objects.
+*  6. If the x range values of the rectangle doesn't overlap with the x range values of line segment points, they dont collide.
+*  7. Otherwise, if the y range values of the rectangle doesn't overlap with the y range values of line segment points, they dont collide.
+*  8. Otherwise, they collide.
+* 
+*/
 
 bool checkCollision(Shapes::Rectangle& rectangle, Shapes::LineSegment& segment)
 {
@@ -459,15 +525,19 @@ bool checkCollision(Shapes::Rectangle& rectangle, Shapes::LineSegment& segment)
 
 }
 
+/* This function returns the min of the given float value */
 float minimum(float A, float B)
 {
     return A < B ? A : B;
 }
 
+/* This function returns the max of the given float value */
 float maximum(float A, float B)
 {
     return A > B ? A : B;
 }
+
+/* This function will return a enlarged rectangle of the given rectangle to the given corner*/
 
 Shapes::Rectangle extend_bound_rectangle(Shapes::Rectangle& bound, Vector2f& corner)
 {
@@ -484,6 +554,7 @@ Shapes::Rectangle extend_bound_rectangle(Shapes::Rectangle& bound, Vector2f& cor
 
 }
 
+/* This function returns a bound rectangle for the given oriented rectangle*/
 
 Shapes::Rectangle oriented_rectangle_bound(Shapes::Oriented_Rectangle& orientedRect)
 {
@@ -500,6 +571,8 @@ Shapes::Rectangle oriented_rectangle_bound(Shapes::Oriented_Rectangle& orientedR
     return bound;
 
 }
+
+/* This function returns vector of the given corner of the given rectangle */
 
 Vector2f rectangle_corner(Shapes::Rectangle& rectangle, int corner_no)
 {
@@ -525,6 +598,7 @@ Vector2f rectangle_corner(Shapes::Rectangle& rectangle, int corner_no)
 
 }
 
+/* This function can be used to check whether the given rectangle overlaps the given line segment in their axis by SAT*/
 
 bool seperating_axis_rectangle(Shapes::Rectangle& rectangle, Shapes::LineSegment& edge)
 {
@@ -543,6 +617,17 @@ bool seperating_axis_rectangle(Shapes::Rectangle& rectangle, Shapes::LineSegment
 
 
 }
+
+/* Rectangle - Oriented Rectangle Collision Detection 
+   
+   1. Create a bound rectangle for the given oriented rectangle.
+   2. If the given rectangle and the bounded rectangle doesn't collide, then the given oriented rectangle and the rectangle wont collide.
+   3. Otherwise, create any edge of the given oriented rectangle as line segment,
+      and check do the rectangle overlaps them using seperating_axis_rectangle() function.
+   4. If not, they wont collide.
+   5, Otherwise create a line segment with the adjacent edge to the given oriented rectangle.
+   6. Again check for the overlap, if they overlap, they will collide.
+*/
 
 bool checkCollision(Shapes::Rectangle& rect, Shapes::Oriented_Rectangle& orientedRect)
 {
@@ -566,6 +651,12 @@ bool checkCollision(Shapes::Rectangle& rect, Shapes::Oriented_Rectangle& oriente
 
 }
 
+/* Point - Line Collision Detection 
+    
+   If they collide, then the vector from the line to the point will be parallel to line direction. Also, if line.point == point.
+
+*/
+
 bool checkCollision(Vector2f& point, Shapes::Line& line)
 {
     if (point == line.point)
@@ -577,6 +668,12 @@ bool checkCollision(Vector2f& point, Shapes::Line& line)
 
 }
 
+/* Point - Line Segment Collision Detection 
+   
+   This works same as circle - line segment collision detection, but there will no radius.
+
+*/
+
 bool checkCollision(Vector2f& point, Shapes::LineSegment& segment)
 {
     Vector2f distance = segment.point2 - segment.point1;
@@ -584,6 +681,14 @@ bool checkCollision(Vector2f& point, Shapes::LineSegment& segment)
     Vector2f projected = projection(toPoint, distance);
     return parallelVectorCheck(toPoint, projected) && projected.length() <= distance.length() && dotproduct(projected, distance) >= 0;
 }
+
+/* Point - Oriented Rectangle Collision Detection
+
+    1. Create a local space rectangle for the given oriented rectangle.
+    2. Create a local space point for the given point.
+    3. If this rectangle and the point collide they collide.
+
+*/
 
 bool checkCollision(Vector2f& point, Shapes::Oriented_Rectangle& orientedRect)
 {
@@ -595,10 +700,24 @@ bool checkCollision(Vector2f& point, Shapes::Oriented_Rectangle& orientedRect)
     return checkCollision(localRect, localPoint);
 }
 
+/* Line - Line Segment Collision
+    
+   If the line segment is on the one side of the line, they wont collide.
+
+*/
+
 bool checkCollision(Shapes::Line& line, Shapes::LineSegment& segment)
 {
     return !on_one_side(line, segment);
 }
+
+/* Line - Oriented Rectangle Collision 
+
+    1. Create a local rectangle.
+    2. Create a local Line.
+    3. If this rectangle and the line collide, then they will collide.
+
+*/
 
 bool checkCollision(Shapes::Line& line, Shapes::Oriented_Rectangle& orientedRect)
 {
@@ -616,6 +735,14 @@ bool checkCollision(Shapes::Line& line, Shapes::Oriented_Rectangle& orientedRect
     return checkCollision(localRect, localLine);
 
 }
+
+/* Line Segment - Oriented Rectangle Collision
+
+   1. Create a local rectangle.
+   2. Create a local Line Segment.
+   3. If this rectangle and the line segment collide, then they will collide.
+
+*/
 
 bool checkCollision(Shapes::LineSegment& segment, Shapes::Oriented_Rectangle& orientedRect)
 {

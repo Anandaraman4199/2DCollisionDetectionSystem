@@ -4,11 +4,21 @@
 
 namespace Shapes
 {
+
+    // Line Shape
+
     struct Line
     {
+
+    // Private members for sfml
+    private:
+        sf::Vertex line[2];
+
+    // Details of the shape
+    public:
         Vector2f point, direction;
 
-        sf::Vertex line[2];
+    //Constructor Initialises values for sfml
 
         Line(Vector2f Point, Vector2f Direction) :point(Point), direction(Direction)
         {
@@ -24,6 +34,8 @@ namespace Shapes
             line[1] = sf::Vertex(sf::Vector2f(linePointB));
 
         }
+
+        // Keybindings functions for the shape will update the values of the shape details and sfml variables.
 
         void moveUp()
         {
@@ -81,11 +93,15 @@ namespace Shapes
             line[1] = sf::Vertex(sf::Vector2f(linePointB));
         }
 
+        //Function to change colour. Can be used to see the collision.
+
         void setColour(sf::Color colour)
         {
             line[0].color = colour;
             line[1].color = colour;
         }
+
+        //SFML draw function. To maintain uniformity
 
         void draw(sf::RenderWindow& window)
         {
@@ -96,17 +112,30 @@ namespace Shapes
 
     };
 
+    // Line Segment Shape
+
     struct LineSegment
     {
+
+        // Private members for sfml
+
+    private:
         sf::Vertex line[2];
 
+        // Details of the shape
+
+    public:
         Vector2f point1, point2;
+
+        //Constructor Initialises values for sfml
 
         LineSegment(Vector2f Point1, Vector2f Point2) :point1(Point1), point2(Point2)
         {
             line[0] = sf::Vertex(sf::Vector2f(point1.x, point1.y));
             line[1] = sf::Vertex(sf::Vector2f(point2.x, point2.y));
         }
+
+        // Keybindings functions for the shape will update the values of the shape details and sfml variables.
 
         void moveUp()
         {
@@ -140,11 +169,15 @@ namespace Shapes
             line[1] = sf::Vertex(sf::Vector2f(point2.x, point2.y));
         }
 
+        //Function to change colour. Can be used to see the collision.
+
         void setColour(sf::Color colour)
         {
             line[0].color = colour;
             line[1].color = colour;
         }
+
+        //SFML draw function. To maintain uniformity
 
         void draw(sf::RenderWindow& window)
         {
@@ -154,12 +187,23 @@ namespace Shapes
 
     };
 
+    //Circle Shape
+
     struct Circle
     {
+
+        // Private members for sfml
+
+    private:
+        sf::CircleShape circle;
+
+        // Details of the shape
+
+    public:
         Vector2f centre;
         float radius;
-
-        sf::CircleShape circle;
+        
+        //Constructor Initialises values for sfml
 
         Circle(Vector2f Centre, float Radius) :centre(Centre), radius(Radius)
         {
@@ -168,6 +212,8 @@ namespace Shapes
             circle.setPointCount(radius / 2);
             circle.setOrigin(sf::Vector2f(circle.getGlobalBounds().width / 2, circle.getGlobalBounds().height / 2));
         }
+
+        // Keybindings functions for the shape will update the values of the shape details and sfml variables.
 
         void moveUp()
         {
@@ -193,10 +239,14 @@ namespace Shapes
             circle.setPosition(sf::Vector2f(centre.x, centre.y));
         }
 
+        //Function to change colour. Can be used to see the collision.
+
         void setColour(sf::Color colour)
         {
             circle.setFillColor(colour);
         }
+
+        //SFML draw function. To maintain uniformity
 
         void draw(sf::RenderWindow& window)
         {
@@ -205,11 +255,23 @@ namespace Shapes
 
     };
 
+    //Rectangle Shape
+
     struct Rectangle
     {
+    
+        // Private members for sfml
+
+    private:
+        sf::RectangleShape rect;
+
+        // Details of the shape
+
+    public:
         Vector2f origin;
         float width, height;
-        sf::RectangleShape rect;
+       
+        //Constructor Initialises values for sfml
 
         Rectangle(float Width, float Height, Vector2f Origin) :width(Width), height(Height), origin(Origin)
         {
@@ -217,6 +279,8 @@ namespace Shapes
             rect.setSize(sf::Vector2f(Width, Height));
             rect.setFillColor(sf::Color::White);
         }
+
+        // Keybindings functions for the shape will update the values of the shape details and sfml variables.
 
         void moveUp()
         {
@@ -242,10 +306,14 @@ namespace Shapes
             rect.setPosition(sf::Vector2f(origin.x, origin.y));
         }
 
+        //Function to change colour. Can be used to see the collision.
+
         void setColour(sf::Color colour)
         {
             rect.setFillColor(colour);
         }
+
+        //SFML draw function. To maintain uniformity
 
         void draw(sf::RenderWindow& window)
         {
@@ -255,16 +323,31 @@ namespace Shapes
 
     };
 
+    //Oriented Rectangle Shape
+
     struct Oriented_Rectangle
     {
+
+    // Private members for sfml
+
+    private:
+        sf::Vertex rect[4];
+
+        // Details of the shape
+
+    public:
         Vector2f centre, halfExtend;
         float angle;
 
+        //nvertex stores the value of the corners in local space
+
         Vector2f nvertex[4];
+
+        //vertex stores the value of the corners in world space
 
         Vector2f vertex[4];
 
-        sf::Vertex rect[4];
+        //Constructor Initialises values for sfml and nvertex and vertex
 
         Oriented_Rectangle(Vector2f Centre, Vector2f HalfExtend, float Angle) :centre(Centre), halfExtend(HalfExtend), angle(Angle)
         {
@@ -293,6 +376,9 @@ namespace Shapes
 
         }
 
+    private:
+
+        // This function will update the values of vertex and sfml variable after every key input
         void update()
         {
             for (int i = 0; i < 4; i++)
@@ -302,6 +388,10 @@ namespace Shapes
             }
 
         }
+
+    public:
+
+        // Keybindings functions for the shape will update the values of the shape details and sfml variables.
 
         void moveUp()
         {
@@ -347,10 +437,14 @@ namespace Shapes
             this->update();
         }
 
+        //SFML draw function. To maintain uniformity
+
         void draw(sf::RenderWindow& window)
         {
             window.draw(rect, 4, sf::Quads);
         }
+
+        //Function to change colour. Can be used to see the collision.
 
         void setColour(sf::Color colour)
         {

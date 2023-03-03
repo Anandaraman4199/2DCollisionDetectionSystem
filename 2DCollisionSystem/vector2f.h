@@ -3,6 +3,8 @@
 
 struct Vector2f
 {
+    // Vector variables
+
     float x, y;
 
     Vector2f()
@@ -16,6 +18,8 @@ struct Vector2f
     {
 
     }
+
+    //Vector Mathematical functions
 
     Vector2f operator +(Vector2f& other) const;
 
